@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./App.css";
 import ImageCarousel from "./components/ImageCarousel";
 
@@ -6,8 +7,11 @@ import meeting1 from "./assets/images/meeting-1.jpg";
 import meeting2 from "./assets/images/meeting-2.jpg";
 
 const EMAIL = "info@wingsarena.com";
+const SUBJECT = "Meeting Room Rental - Pricing & Availability";
 
 export default function App() {
+  const [toast, setToast] = useState("");
+
   const images = [
     {
       src: meeting2,
@@ -23,9 +27,58 @@ export default function App() {
     },
   ];
 
-  const mailtoPricing = `mailto:${EMAIL}?subject=${encodeURIComponent(
-    "Meeting Room Rental - Pricing & Availability"
-  )}`;
+  const mailtoPricing = `mailto:${EMAIL}?subject=${encodeURIComponent(SUBJECT)}`;
+
+  // ✅ Works even when embedded (tries to break out of iframe)
+  // ✅ Provides a guaranteed fallback (Gmail compose) + "copy email"
+  const openEmail = async () => {
+    const gmailCompose = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+      EMAIL
+    )}&su=${encodeURIComponent(SUBJECT)}`;
+
+    // 1) Try mailto at the top window (best chance in iframes)
+    try {
+      if (window.top) {
+        window.top.location.href = mailtoPricing;
+      } else {
+        window.location.href = mailtoPricing;
+      }
+      return;
+    } catch {
+      // ignore and fall through
+    }
+
+    // 2) If mailto is blocked, try opening Gmail compose in a new tab
+    try {
+      window.open(gmailCompose, "_blank", "noopener,noreferrer");
+      setToast("If your mail app didn’t open, we opened Gmail compose instead.");
+      setTimeout(() => setToast(""), 3500);
+      return;
+    } catch {
+      // ignore and fall through
+    }
+
+    // 3) Last resort: copy email
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+      setToast("Email copied: info@wingsarena.com");
+      setTimeout(() => setToast(""), 3000);
+    } catch {
+      setToast("Email: info@wingsarena.com");
+      setTimeout(() => setToast(""), 4000);
+    }
+  };
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+      setToast("Email copied: info@wingsarena.com");
+      setTimeout(() => setToast(""), 3000);
+    } catch {
+      setToast("Email: info@wingsarena.com");
+      setTimeout(() => setToast(""), 4000);
+    }
+  };
 
   return (
     <div className="page">
@@ -36,20 +89,22 @@ export default function App() {
               <div className="kicker">Private rental space • Rink-side option</div>
               <h1 className="h1">Meeting Room Rentals</h1>
               <p className="sub">
-                Host a business meeting, team session, clinic, or presentation in a clean, private room with a
-                full business center setup — conference tables, rolling office chairs, a wall-mounted TV, and
-                dependable Wi-Fi for seamless work and presentations.
+                Host a business meeting, team session, clinic, or presentation in a
+                clean, private room with a full business center setup — conference
+                tables, rolling office chairs, a wall-mounted TV, and dependable
+                Wi-Fi for seamless work and presentations.
               </p>
 
               <div className="ctas">
-                <a
-                  className="btn btnPrimary"
-                  href={mailtoPricing}
-                  target="_top"
-                  rel="noopener noreferrer"
-                >
+                {/* ✅ Button (not mailto anchor) so we can force top navigation + fallback */}
+                <button type="button" className="btn btnPrimary" onClick={openEmail}>
                   Email for Pricing & Availability
-                </a>
+                </button>
+
+                {/* ✅ Optional small secondary action that always works */}
+                <button type="button" className="btn btnGhost" onClick={copyEmail}>
+                  Copy Email
+                </button>
               </div>
 
               <div className="smallNote">
@@ -70,7 +125,8 @@ export default function App() {
             <div className="card">
               <div className="cardTitle">Presentation-Ready</div>
               <p className="cardText">
-                A large wall-mounted TV makes it easy to run presentations, videos, and meeting content.
+                A large wall-mounted TV makes it easy to run presentations, videos,
+                and meeting content.
               </p>
             </div>
 
@@ -84,15 +140,16 @@ export default function App() {
             <div className="card">
               <div className="cardTitle">Strategy Board</div>
               <p className="cardText">
-                Dry-erase coaching board on the wall — perfect for business planning, team building, clinics,
-                and meetings.
+                Dry-erase coaching board on the wall — perfect for business planning,
+                team building, clinics, and meetings.
               </p>
             </div>
 
             <div className="card">
               <div className="cardTitle">Bright + Comfortable</div>
               <p className="cardText">
-                Bright overhead panel lighting, carpeted flooring, and a clean, private room feel.
+                Bright overhead panel lighting, carpeted flooring, and a clean,
+                private room feel.
               </p>
             </div>
           </div>
@@ -113,16 +170,16 @@ export default function App() {
               Ready to book or want to check dates? Email{" "}
               <span className="email">{EMAIL}</span> for pricing & availability.
             </p>
-            <a
-              className="btn btnPrimary"
-              href={mailtoPricing}
-              target="_top"
-              rel="noopener noreferrer"
-            >
+
+            {/* ✅ Same robust behavior in footer */}
+            <button type="button" className="btn btnPrimary" onClick={openEmail}>
               Email {EMAIL}
-            </a>
+            </button>
           </div>
         </div>
+
+        {/* ✅ lightweight toast */}
+        {toast ? <div className="toast">{toast}</div> : null}
       </div>
     </div>
   );

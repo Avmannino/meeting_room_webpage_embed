@@ -183,6 +183,51 @@
   color: #ffffff;
 }
 
+/* Make buttons behave well on mobile taps */
+.btn {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  pointer-events: auto;
+}
+
+/* Ensure CTA area sits above any overlapping elements */
+.ctas {
+  position: relative;
+  z-index: 5;
+}
+
+/* Secondary button style */
+.btnGhost {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: rgba(242, 246, 251, 0.9);
+}
+
+.btnGhost:hover {
+  background: rgba(255, 255, 255, 0.085);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* Toast message */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.45);
+  color: rgba(242, 246, 251, 0.92);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+  font-size: 13px;
+  z-index: 9999;
+  max-width: calc(100vw - 32px);
+  text-align: center;
+}
+
+
 /* Responsive */
 @media (max-width: 900px) {
   /* Center basically everything on mobile */
