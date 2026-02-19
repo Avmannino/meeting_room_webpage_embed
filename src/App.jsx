@@ -21,8 +21,6 @@ export default function App() {
       label: "Presentation Ready",
       note: "Wall-mounted TV for slides, video, and screen sharing",
     },
-    // ✅ Add more images by importing them above and pushing here:
-    // { src: meeting3, alt: "...", label: "...", note: "..." }
   ];
 
   const mailtoPricing = `mailto:${EMAIL}?subject=${encodeURIComponent(
@@ -34,25 +32,29 @@ export default function App() {
       <div className="wrap">
         <div className="hero">
           <div className="heroGrid">
-            {/* IMPORTANT: This is the one container that stays LEFT-aligned on mobile */}
             <div className="heroContent">
               <div className="kicker">Private rental space • Rink-side option</div>
               <h1 className="h1">Meeting Room Rentals</h1>
               <p className="sub">
-                Host a business meeting, team session, clinic, or presentation in a clean, private room with a 
-                full business center setup — conference tables, rolling office chairs, a wall-mounted TV, and 
+                Host a business meeting, team session, clinic, or presentation in a clean, private room with a
+                full business center setup — conference tables, rolling office chairs, a wall-mounted TV, and
                 dependable Wi-Fi for seamless work and presentations.
               </p>
 
               <div className="ctas">
-                <a className="btn btnPrimary" href={mailtoPricing}>
+                <a
+                  className="btn btnPrimary"
+                  href={mailtoPricing}
+                  target="_top"
+                  rel="noopener noreferrer"
+                >
                   Email for Pricing & Availability
                 </a>
               </div>
 
               <div className="smallNote">
-                Availability and rates vary by
-                date/time. Email <span className="email">{EMAIL}</span> for info, pricing & availability.
+                Availability and rates vary by date/time. Email{" "}
+                <span className="email">{EMAIL}</span> for info, pricing & availability.
               </div>
             </div>
 
@@ -63,51 +65,41 @@ export default function App() {
         </div>
 
         <div className="section">
-          <h2 className="sectionTitle">What’s in the Room?</h2>
+          <h2 className="sectionTitle">What’s in the room</h2>
           <div className="grid2">
             <div className="card">
-              <div className="cardTitle">
-                Presentation-Ready
-              </div>
+              <div className="cardTitle">Presentation-Ready</div>
               <p className="cardText">
-                A large wall-mounted TV makes it easy to run presentations,
-                videos, and meeting content.
+                A large wall-mounted TV makes it easy to run presentations, videos, and meeting content.
               </p>
             </div>
 
             <div className="card">
-              <div className="cardTitle">
-                Conference Setup
-              </div>
+              <div className="cardTitle">Conference Setup</div>
               <p className="cardText">
-                Long wood conference table with comfortable rolling office
-                chairs.
-              </p>
-            </div>
-            <div className="card">
-              <div className="cardTitle">
-                Strategy Board
-              </div>
-              <p className="cardText">
-                Dry-erase coaching board on the wall — perfect for business planning, team
-                building, clinics, and meetings.
+                Long wood conference table with comfortable rolling office chairs.
               </p>
             </div>
 
             <div className="card">
-              <div className="cardTitle">
-                Bright + Comfortable
-              </div>
+              <div className="cardTitle">Strategy Board</div>
               <p className="cardText">
-                Bright overhead panel lighting, carpeted flooring, and a clean,
-                private room feel.
+                Dry-erase coaching board on the wall — perfect for business planning, team building, clinics,
+                and meetings.
+              </p>
+            </div>
+
+            <div className="card">
+              <div className="cardTitle">Bright + Comfortable</div>
+              <p className="cardText">
+                Bright overhead panel lighting, carpeted flooring, and a clean, private room feel.
               </p>
             </div>
           </div>
         </div>
 
         <div className="section">
-          <h2 className="sectionTitle">Great For</h2>
+          <h2 className="sectionTitle">Great for</h2>
           <ul className="list">
             <li>Business meetings, offsites, and team working sessions</li>
             <li>Coach / player meetings, video review, and chalk-talk</li>
@@ -121,7 +113,12 @@ export default function App() {
               Ready to book or want to check dates? Email{" "}
               <span className="email">{EMAIL}</span> for pricing & availability.
             </p>
-            <a className="btn btnPrimary" href={mailtoPricing}>
+            <a
+              className="btn btnPrimary"
+              href={mailtoPricing}
+              target="_top"
+              rel="noopener noreferrer"
+            >
               Email {EMAIL}
             </a>
           </div>
