@@ -185,8 +185,7 @@
 
 /* Responsive */
 @media (max-width: 900px) {
-
-  /* ✅ Center basically everything on mobile */
+  /* Center basically everything on mobile */
   .wrap {
     text-align: center;
   }
@@ -220,11 +219,11 @@
     justify-content: center;
   }
 
-  /* Sections centered */
   .grid2 {
     grid-template-columns: 1fr;
   }
 
+  /* Sections centered */
   .section {
     text-align: center;
   }
@@ -250,25 +249,66 @@
   /* ✅ EXCEPTION #1: Great for bullets should NOT be centered */
   .section .list {
     padding-left: 18px;
-    /* restore indentation */
     list-style-position: outside;
-    /* normal bullets */
     text-align: left;
-    /* keep bullets left-aligned */
     display: inline-block;
-    /* keeps the list block “centered” while text stays left */
     margin: 0 auto;
-    /* centers the list container */
   }
 
   /* ✅ EXCEPTION #2: "Ready to book..." text should NOT be centered */
   .section .footerText {
-    text-align: center;
+    text-align: left;
   }
 
-  /* Keep the footer layout feeling centered even though footerText is left */
   .section .footerCTA {
     justify-content: center;
     text-align: center;
+  }
+
+  /* =========================================================
+     ✅ CAROUSEL: Make it MUCH larger on mobile (incl. 390px)
+     ========================================================= */
+  .carouselFrame {
+    /* Force a bigger presence on small phones */
+    height: clamp(420px, 92vw, 620px);
+  }
+
+  /* =========================================================
+     ✅ OVERLAY: Make caption smaller + clamp lines so it
+     never blocks the image / never gets tall.
+     ========================================================= */
+  .carouselCaption {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    padding: 8px 10px;
+    border-radius: 12px;
+  }
+
+  .carouselCaptionTitle {
+    font-size: 13px;
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .carouselCaptionSub {
+    font-size: 11px;
+    line-height: 1.25;
+    margin-top: 3px;
+    opacity: 0.82;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* keep it to one line */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Optional: slightly smaller nav buttons on mobile */
+  .carouselNavBtn {
+    width: 38px;
+    height: 38px;
+    font-size: 26px;
   }
 }

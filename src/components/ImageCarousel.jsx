@@ -4,6 +4,7 @@ export default function ImageCarousel({
   images = [],
   autoPlay = true,
   autoPlayMs = 6500,
+  className = "",
 }) {
   const safeImages = useMemo(() => images.filter(Boolean), [images]);
 
@@ -11,7 +12,7 @@ export default function ImageCarousel({
 
   // Slide animation state
   const [nextIndex, setNextIndex] = useState(null); // null when idle
-  const [direction, setDirection] = useState(1); // 1 => next (slide left), -1 => prev (slide right)
+  const [direction, setDirection] = useState(1); // 1 => next, -1 => prev
   const [trackX, setTrackX] = useState(0); // percent translateX
   const [transitionOn, setTransitionOn] = useState(false);
 
@@ -36,19 +37,16 @@ export default function ImageCarousel({
     const target = ((toIndex % n) + n) % n;
     if (target === index) return;
 
+    // Direction: next => slide left, prev => slide right
     const dir = target > index ? 1 : -1;
     setDirection(dir);
     setNextIndex(target);
 
-    // Prepare the track position WITHOUT transition so it "snaps" to the start frame
+    // Snap to starting position without transition
     setTransitionOn(false);
-
-    // Track arrangement:
-    // dir=1: [current, next], start at 0 -> animate to -100
-    // dir=-1: [next, current], start at -100 -> animate to 0
     setTrackX(dir === 1 ? 0 : -100);
 
-    // Next frame: enable transition and move track to animate
+    // Next frame: enable transition and animate
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         setTransitionOn(true);
@@ -68,10 +66,7 @@ export default function ImageCarousel({
   const onTransitionEnd = () => {
     if (nextIndex === null) return;
 
-    // Commit the slide
     setIndex(nextIndex);
-
-    // Reset animation state
     setNextIndex(null);
     setTransitionOn(false);
     setTrackX(0);
@@ -105,7 +100,7 @@ export default function ImageCarousel({
 
   if (!safeImages.length) {
     return (
-      <div style={styles.fallback}>
+      <div className="carouselFallback" style={styles.fallback}>
         Add images to <b>src/assets/images/</b> and update the imports.
       </div>
     );
@@ -114,8 +109,8 @@ export default function ImageCarousel({
   const shownIndex = nextIndex !== null ? nextIndex : index;
   const shown = safeImages[shownIndex];
 
-  // Build slides for animation frame
   let slides = null;
+
   if (!isAnimating) {
     slides = (
       <img
@@ -137,7 +132,7 @@ export default function ImageCarousel({
         style={{
           ...styles.track,
           transform: `translateX(${trackX}%)`,
-          transition: transitionOn ? "transform 320ms ease-in-out" : "none",
+          transition: transitionOn ? "transform 420ms ease-in-out" : "none",
         }}
         onTransitionEnd={onTransitionEnd}
       >
@@ -163,18 +158,19 @@ export default function ImageCarousel({
 
   return (
     <div
+      className={`carousel ${className}`.trim()}
       style={styles.wrap}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <div style={styles.frame}>
-        {/* Image / Animated track */}
+      <div className="carouselFrame" style={styles.frame}>
         {slides}
 
         <button
           type="button"
           onClick={() => go(-1)}
           aria-label="Previous photo"
+          className="carouselNavBtn"
           style={{ ...styles.navBtn, left: 10, opacity: isAnimating ? 0.55 : 1 }}
           disabled={isAnimating}
         >
@@ -184,15 +180,18 @@ export default function ImageCarousel({
           type="button"
           onClick={() => go(1)}
           aria-label="Next photo"
+          className="carouselNavBtn"
           style={{ ...styles.navBtn, right: 10, opacity: isAnimating ? 0.55 : 1 }}
           disabled={isAnimating}
         >
           ›
         </button>
 
-        <div style={styles.caption}>
-          <div style={styles.captionTitle}>{shown.label || "Meeting Room"}</div>
-          <div style={styles.captionSub}>
+        <div className="carouselCaption" style={styles.caption}>
+          <div className="carouselCaptionTitle" style={styles.captionTitle}>
+            {shown.label || "Meeting Room"}
+          </div>
+          <div className="carouselCaptionSub" style={styles.captionSub}>
             {shown.note || "Swipe / click arrows to browse"}
           </div>
         </div>
@@ -230,7 +229,6 @@ const styles = {
     border: "1px solid rgba(255,255,255,0.14)",
     background: "rgba(255,255,255,0.04)",
     boxShadow: "0 14px 44px rgba(0,0,0,0.28)",
-    aspectRatio: "16 / 9",
   },
 
   // Track-based slider
@@ -283,7 +281,7 @@ const styles = {
     backdropFilter: "blur(8px)",
   },
   captionTitle: { fontWeight: 900, letterSpacing: "-0.2px" },
-  captionSub: { marginTop: 2, opacity: 0.8, fontSize: 12 },
+  captionSub: { marginTop: 2, opacity: 0.85 },
 
   dots: {
     display: "flex",
