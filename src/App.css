@@ -201,10 +201,11 @@
 
   .kicker {
     text-align: center;
+    font-size: 12.5px;
   }
 
   .h1 {
-    font-size: 29.5px;
+    font-size: 25.5px;
     text-align: center;
     padding-top: 5px;
     padding-bottom: 5px;
