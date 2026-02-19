@@ -29,9 +29,8 @@ export default function App() {
 
   const mailtoPricing = `mailto:${EMAIL}?subject=${encodeURIComponent(SUBJECT)}`;
 
-  // ✅ Works even when embedded (tries to break out of iframe)
-  // ✅ Provides a guaranteed fallback (Gmail compose) + "copy email"
-  const openEmail = async () => {
+  // ✅ Tries to open mail client; falls back to Gmail compose if mailto is blocked (common in iframes on mobile)
+  const openEmail = () => {
     const gmailCompose = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
       EMAIL
     )}&su=${encodeURIComponent(SUBJECT)}`;
@@ -48,34 +47,13 @@ export default function App() {
       // ignore and fall through
     }
 
-    // 2) If mailto is blocked, try opening Gmail compose in a new tab
+    // 2) If mailto is blocked, open Gmail compose
     try {
       window.open(gmailCompose, "_blank", "noopener,noreferrer");
       setToast("If your mail app didn’t open, we opened Gmail compose instead.");
       setTimeout(() => setToast(""), 3500);
-      return;
     } catch {
-      // ignore and fall through
-    }
-
-    // 3) Last resort: copy email
-    try {
-      await navigator.clipboard.writeText(EMAIL);
-      setToast("Email copied: info@wingsarena.com");
-      setTimeout(() => setToast(""), 3000);
-    } catch {
-      setToast("Email: info@wingsarena.com");
-      setTimeout(() => setToast(""), 4000);
-    }
-  };
-
-  const copyEmail = async () => {
-    try {
-      await navigator.clipboard.writeText(EMAIL);
-      setToast("Email copied: info@wingsarena.com");
-      setTimeout(() => setToast(""), 3000);
-    } catch {
-      setToast("Email: info@wingsarena.com");
+      setToast(`Email: ${EMAIL}`);
       setTimeout(() => setToast(""), 4000);
     }
   };
@@ -96,14 +74,8 @@ export default function App() {
               </p>
 
               <div className="ctas">
-                {/* ✅ Button (not mailto anchor) so we can force top navigation + fallback */}
                 <button type="button" className="btn btnPrimary" onClick={openEmail}>
                   Email for Pricing & Availability
-                </button>
-
-                {/* ✅ Optional small secondary action that always works */}
-                <button type="button" className="btn btnGhost" onClick={copyEmail}>
-                  Copy Email
                 </button>
               </div>
 
@@ -171,14 +143,12 @@ export default function App() {
               <span className="email">{EMAIL}</span> for pricing & availability.
             </p>
 
-            {/* ✅ Same robust behavior in footer */}
             <button type="button" className="btn btnPrimary" onClick={openEmail}>
               Email {EMAIL}
             </button>
           </div>
         </div>
 
-        {/* ✅ lightweight toast */}
         {toast ? <div className="toast">{toast}</div> : null}
       </div>
     </div>
